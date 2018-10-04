@@ -1,0 +1,177 @@
+{
+  "name": "FlogoActivityGateway",
+  "type": "flogo:app",
+  "version": "1.0.0",
+  "description": "This is a simple proxy.",
+  "triggers": [
+    {
+      "name": "Receive HTTP Message",
+      "id": "receive_http_message",
+      "ref": "github.com/TIBCOSoftware/flogo-contrib/trigger/rest",
+      "description": "Simple REST Trigger",
+      "settings": {
+        "port": "9096"
+      },
+      "handlers": [
+        {
+          "settings": {
+            "method": "GET",
+            "path": "/pets/:petId"
+          },
+          "action": {
+            "id": "pets"
+          }
+        }
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "id": "pets",
+      "ref": "github.com/TIBCOSoftware/flogo-contrib/action/flow",
+      "data": {
+        "flowURI": "res://flow:pets"
+      }
+    }
+  ],
+  "resources": [
+    {
+      "id": "flow:pets",
+      "compressed": false,
+      "data": {
+          "name": "flow",
+          "type": 1,
+          "attributes": [],
+          "rootTask": {
+            "id": "root",
+            "type": 1,
+            "tasks": [
+              {
+                "id": "rest_2",
+                "name": "Invoke REST Service",
+                "description": "Simple REST Activity",
+                "type": 1,
+                "activityType": "github-com-pointlander-flogoactivity",
+                "activityRef": "github.com/pointlander/flogoactivity",
+                "attributes": [
+                  {
+                    "name": "serviceName",
+                    "value": "reset",
+                    "required": true,
+                    "type": "string"
+                  },
+                  {
+                    "name": "ref",
+                    "value": "github.com/TIBCOSoftware/flogo-contrib/activity/rest",
+                    "required": true,
+                    "type": "string"
+                  },
+                  {
+                    "name": "inputs",
+                    "value": {
+                      "method": "GET",
+                      "uri": "http://petstore.swagger.io/v2/pet/:petId",
+                      "pathParams": null,
+                      "queryParams": null,
+                      "content": null
+                    },
+                    "required": false,
+                    "type": "any"
+                  }
+                ],
+                "inputMappings": [
+                  {
+                    "type": 1,
+                    "value": "{T.pathParams}",
+                    "mapTo": "inputs.pathParams"
+                  }
+                ]
+              },
+              {
+                "id": "reply_5",
+                "name": "Reply (Legacy)",
+                "description": "Simple Reply Activity",
+                "type": 1,
+                "activityType": "tibco-reply",
+                "activityRef": "github.com/TIBCOSoftware/flogo-contrib/activity/actreply",
+                "attributes": [
+                  {
+                    "name": "code",
+                    "value": 0,
+                    "required": true,
+                    "type": "integer"
+                  },
+                  {
+                    "name": "data",
+                    "value": null,
+                    "required": false,
+                    "type": "any"
+                  }
+                ],
+                "input": {
+                  "mappings": [
+                    {
+                      "type": 1,
+                      "value": "$activity[rest_2].outputs.status",
+                      "mapTo": "code"
+                    },
+                    {
+                      "type": 1,
+                      "value": "$activity[rest_2].outputs.result",
+                      "mapTo": "data"
+                    }
+                  ]
+                }
+              }
+            ],
+            "links": [
+              {
+                "id": 1,
+                "from": "rest_2",
+                "to": "reply_5",
+                "type": 0
+              }
+            ],
+            "attributes": []
+          },
+          "explicitReply": true,
+          "errorHandlerTask": {
+            "id": 7,
+            "type": 1,
+            "tasks": [
+              {
+                "id": "log_8",
+                "name": "Log Message (5)",
+                "description": "Simple Log Activity",
+                "type": 1,
+                "activityType": "tibco-log",
+                "activityRef": "github.com/TIBCOSoftware/flogo-contrib/activity/log",
+                "attributes": [
+                  {
+                    "name": "message",
+                    "value": "Error Processing request in gateway",
+                    "required": false,
+                    "type": "string"
+                  },
+                  {
+                    "name": "flowInfo",
+                    "value": "true",
+                    "required": false,
+                    "type": "boolean"
+                  },
+                  {
+                    "name": "addToFlow",
+                    "value": "true",
+                    "required": false,
+                    "type": "boolean"
+                  }
+                ]
+              }
+            ],
+            "links": [],
+            "attributes": []
+          }
+        }
+    }
+  ]
+}
