@@ -52,7 +52,8 @@ func (f *FlogoActivityActivity) Eval(context activity.Context) (done bool, err e
 		ivRef:    context.GetInput(ivRef),
 		ivInputs: context.GetInput(ivInputs),
 	}
-	service, err := InitializeFlogoActivity(serviceName, settings)
+	factory := Factory{}
+	service, err := factory.Make(serviceName, settings)
 	if err != nil {
 		return false, err
 	}
@@ -85,8 +86,11 @@ type FlogoActivityResponse struct {
 	Outputs map[string]interface{} `json:"outputs"`
 }
 
+type Factory struct {
+}
+
 // InitializeFlogoActivity initializes a FlogoActivity service with provided settings.
-func InitializeFlogoActivity(name string, settings map[string]interface{}) (registry.Service, error) {
+func (f *Factory) Make(name string, settings map[string]interface{}) (registry.Service, error) {
 	flogoActivityService := &FlogoActivity{}
 	req := FlogoActivityRequest{}
 	req.Inputs = make(map[string]interface{})
@@ -96,7 +100,7 @@ func InitializeFlogoActivity(name string, settings map[string]interface{}) (regi
 }
 
 func init() {
-	registry.Register("flogoActivity", InitializeFlogoActivity)
+	registry.Register("flogoActivity", &Factory{})
 }
 
 // UpdateRequest updates a request on an existing FlogoActivity service instance with new values.
