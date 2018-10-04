@@ -51,8 +51,8 @@
                 "name": "Invoke REST Service",
                 "description": "Simple REST Activity",
                 "type": 1,
-                "activityType": "github-com-pointlander-flogoactivity",
-                "activityRef": "github.com/pointlander/flogoactivity",
+                "activityType": "github-com-mashling-flogoactivity",
+                "activityRef": "github.com/mashling/flogoactivity",
                 "attributes": [
                   {
                     "name": "serviceName",

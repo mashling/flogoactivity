@@ -6,7 +6,7 @@ To install run the following commands:
 ```
 flogo create -f flogo.json
 cd FlogoActivityGateway
-flogo install github.com/pointlander/flogoactivity
+flogo install github.com/mashling/flogoactivity
 flogo install github.com/TIBCOSoftware/flogo-contrib/activity/rest
 flogo install github.com/TIBCOSoftware/flogo-contrib/activity/actreply
 flogo install github.com/TIBCOSoftware/flogo-contrib/activity/log
