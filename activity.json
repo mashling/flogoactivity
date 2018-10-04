@@ -1,7 +1,7 @@
 {
   "name": "tibco-flogoactivity",
   "type": "flogo:activity",
-  "ref": "github.com/pointlander/flogoactivity",
+  "ref": "github.com/mashling/flogoactivity",
   "version": "0.0.1",
   "title": "Invoke an Activity",
   "description": "Invoke an Activity",

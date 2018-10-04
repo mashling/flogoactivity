@@ -8,7 +8,7 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/core/data"
 	"github.com/imdario/mergo"
-	"github.com/pointlander/mashling/registry"
+	"github.com/mashling/mashling/registry"
 )
 
 const (
