@@ -1,0 +1,39 @@
+{
+  "name": "tibco-flogoactivity",
+  "type": "flogo:activity",
+  "ref": "github.com/TIBCOSoftware/pointlander/flogoactivity",
+  "version": "0.0.1",
+  "title": "Invoke an Activity",
+  "description": "Invoke an Activity",
+  "homepage": "https://github.com/TIBCOSoftware/pointlander/flogoactivity",
+  "input":[
+    {
+      "name": "serviceName",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "ref",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "inputs",
+      "type": "any"
+    }
+  ],
+  "output": [
+    {
+      "name": "done",
+      "type": "boolean"
+    },
+    {
+      "name": "error",
+      "type": "string"
+    },
+    {
+      "name": "outputs",
+      "type": "any"
+    }
+  ]
+}

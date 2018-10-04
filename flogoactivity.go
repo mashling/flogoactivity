@@ -11,6 +11,61 @@ import (
 	"github.com/pointlander/mashling/registry"
 )
 
+const (
+	ivServiceName = "serviceName"
+	ivRef         = "ref"
+	ivInputs      = "inputs"
+
+	ovDone    = "done"
+	ovError   = "error"
+	ovOutputs = "outputs"
+)
+
+// FlogoActivityActivity is an activity adapter for FlogoActivity
+type FlogoActivityActivity struct {
+	metadata *activity.Metadata
+}
+
+// NewActivity creates a new activity
+func NewActivity(metadata *activity.Metadata) activity.Activity {
+	return &FlogoActivityActivity{
+		metadata: metadata,
+	}
+}
+
+// Metadata return the metadata for the activity
+func (f *FlogoActivityActivity) Metadata() *activity.Metadata {
+	return f.metadata
+}
+
+// Eval executes the activity
+func (f *FlogoActivityActivity) Eval(context activity.Context) (done bool, err error) {
+	value := context.GetInput(ivServiceName)
+	if value == nil {
+		return false, errors.New("serviceName should not be nil")
+	}
+	serviceName, ok := value.(string)
+	if !ok {
+		return false, errors.New("serviceName should be a string")
+	}
+	settings := map[string]interface{}{
+		ivRef:    context.GetInput(ivRef),
+		ivInputs: context.GetInput(ivInputs),
+	}
+	service, err := InitializeFlogoActivity(serviceName, settings)
+	if err != nil {
+		return false, err
+	}
+	err = service.Execute()
+	if err != nil {
+		return false, err
+	}
+	context.SetOutput(ovDone, service.(*FlogoActivity).Response.Done)
+	context.SetOutput(ovError, service.(*FlogoActivity).Response.Error)
+	context.SetOutput(ovOutputs, service.(*FlogoActivity).Response.Outputs)
+	return true, nil
+}
+
 // FlogoActivity is a Flogo activity service.
 type FlogoActivity struct {
 	Request  FlogoActivityRequest  `json:"request"`
